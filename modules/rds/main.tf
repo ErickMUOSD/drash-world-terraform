@@ -1,4 +1,3 @@
-
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-subnet-group"
   subnet_ids = "${var.subnet_ids}"
@@ -10,6 +9,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 resource "aws_db_instance" "rds" {
   identifier             = var.db_name
   engine                 = "postgres"
+  engine_version         = "11"
   instance_class         = var.instance_class
   allocated_storage      = 20
   max_allocated_storage  = 100

@@ -86,7 +86,7 @@ module "web_application"{
 }
 module "ec2_rds" {
   source     = "./modules/ec2/sg"
-  name       = "ec2-sg"
+  name       = "ec2-rds"
   description = "Allow default pg port"
   vpc_id     = module.vpc.vpc_id
 
@@ -95,7 +95,7 @@ module "ec2_rds" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Use a specific CIDR in production!
+    cidr_blocks = ["0.0.0.0/0"]
   }
   ]
 
@@ -110,16 +110,16 @@ module "ec2_rds" {
   ]
 
   tags = {
-    Name = "ec2-sg"
+    Name = "ec2-rds"
   }
 }
 
 module "rds" {
   source = "./modules/rds"
-  db_name = "drash-world"
-  db_password = "drash_world"
-  db_user = "erick-drash"
-instance_class = "t3.micro"
-  sg_rds = [  module.ec2_sg.security_group_id]
+  db_name = var.db_name
+  db_password = var.db_password
+  db_user = var.db_user
+  instance_class = "db.t3.micro"
+  sg_rds = [  module.ec2_rds.security_group_id]
   subnet_ids = module.public_subnets.subnet_ids
 }
